@@ -12,9 +12,10 @@ library(tidyverse)
 library(lubridate)
 
 ##### Import the data #####
+# Date format: %Y/%m/%d or %D (m/d/yy)
 books <- read_csv("data/goodreads_library_export_20200816.csv",
-                  col_types = cols(`Date Read`=col_date(format="%D"),
-                                   `Date Added`=col_date(format="%D")))
+                  col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
+                                   `Date Added`=col_date(format="%Y/%m/%d")))
 
 ##### Goodreads graphs, redone #####
 
@@ -125,6 +126,60 @@ ggplot(data=books) +
       theme(panel.background = element_blank(),
             axis.line = element_line(),
             axis.text.x =element_text(angle=-90))
+
+# Rate at which books are added/read over time (monthly bins)
+addDates <- books %>% 
+   mutate(Month = floor_date(`Date Added`, "month")) %>%
+   group_by(Month) %>% 
+   summarize(BooksAdded=length(Month))
+readDates <- books %>% 
+   filter(!is.na(`Date Read`)) %>%
+   mutate(Month = floor_date(`Date Read`, "month")) %>%
+   group_by(Month) %>% 
+   summarize(BooksRead=length(Month))
+add_read <- full_join(addDates, readDates, by= "Month") %>% 
+   replace_na(list(BooksAdded = 0, BooksRead = 0)) %>%
+   mutate(diff = BooksAdded - BooksRead)
+   
+ggplot(data=add_read)+
+   geom_line(aes(x=Month,y=diff)) +
+   scale_y_continuous(name="Net Books",limits = c(-20,50)) +
+   scale_x_date(date_breaks = "1 month", date_labels = "%Y-%b") +
+   geom_hline(yintercept=0, color = "blue") +
+   theme(panel.background=element_blank(),
+         axis.line = element_line(),
+         axis.text.x=element_text(angle=-90),
+         axis.title.x=element_blank())
+
+# Cumulative want to read over time
+wtr <- add_read %>%
+   # Take out the first two months when I added my to-read list
+   arrange(Month) %>% slice(-1:-2) %>% 
+   mutate(cumdiff=cumsum(diff))
+# Use saved tibble to access max y-value
+ggplot(data=wtr)+
+   geom_line(aes(x=Month,y=cumdiff)) +
+   scale_y_continuous(name="Want to Read") +
+   scale_x_date(date_breaks = "1 month", date_labels = "%Y-%b", expand=c(0,0)) +
+   geom_hline(yintercept=max(wtr$cumdiff), color="blue") +
+   theme(panel.background=element_blank(),
+         axis.line = element_line(),
+         axis.text.x=element_text(angle=-90),
+         axis.title.x=element_blank())
+
+# How long is a book on my shelf before reading it?
+# Histogram view
+books %>%
+   filter(!is.na(`Date Read`)) %>%
+   mutate(daysonlist = as.numeric(`Date Read` - `Date Added`)) %>%
+   filter(daysonlist>0) %>%
+   ggplot(data=.) +
+   geom_histogram(aes(x=daysonlist), binwidth=100,
+                  color = "blue",fill="turquoise") +
+   xlab("Days on Want to Read") + ylab("") +
+   scale_y_continuous(expand=c(0,0))+
+   theme(panel.background=element_blank(),
+         axis.line= element_line())
 
 # Average number of books read by month of the year
 books %>%
