@@ -46,9 +46,11 @@ widebooks %>%
 
 ##### What book should I read? #####
 widebooks %>%
+   left_join(select(books,Title,`Average Rating`)) %>%
+   mutate(highrating = ifelse(`Average Rating`>4,1,0)) %>%
    filter(`to-read`==1) %>%
    filter(kindle==1 | library==1) %>%
-   mutate(ranking=`highly-recommended`+island+`life-changing`+
+   mutate(ranking=`highly-recommended`+island+`life-changing`+ highrating +
              `top-100-lifetime`+`neil-degrasse-tyson`) %>%
    select(Title, ranking, kindle, library) %>%
    arrange(desc(ranking))
