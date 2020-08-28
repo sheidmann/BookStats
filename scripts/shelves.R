@@ -2,7 +2,7 @@
 
 # Sarah Heidmann
 # Created 16 Aug 2020
-# Last modified 16 Aug 2020
+# Last modified 28 Aug 2020
 
 # Organize books by their bookshelves.
 
@@ -43,4 +43,12 @@ widebooks %>%
       bind_rows() %>%
       pivot_longer(everything(), names_to = "shelf", values_to = "books") %>%
       arrange(desc(books))
-      
+
+##### What book should I read? #####
+widebooks %>%
+   filter(`to-read`==1) %>%
+   filter(kindle==1 | library==1) %>%
+   mutate(ranking=`highly-recommended`+island+`life-changing`+
+             `top-100-lifetime`+`neil-degrasse-tyson`) %>%
+   select(Title, ranking, kindle, library) %>%
+   arrange(desc(ranking))
