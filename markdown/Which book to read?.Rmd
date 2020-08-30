@@ -1,0 +1,28 @@
+---
+title: "Which Book To Read?"
+author: "Sarah Heidmann"
+output: html_document
+---
+*Data through 30 Aug 2020*
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(knitr)
+books <- read_csv("data/goodreads_library_export_20200830.csv",
+                  col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
+                                   `Date Added`=col_date(format="%Y/%m/%d")))
+```
+
+## Highest Rated Books
+
+The 10 highest rated unread books in my library:
+
+```{r}
+books %>%
+      filter(`Exclusive Shelf`=="to-read") %>%
+      select(Title, Author, `Average Rating`) %>%
+      arrange(desc(`Average Rating`)) %>%
+      slice_head(n=10) %>%
+      kable()
+```
+
