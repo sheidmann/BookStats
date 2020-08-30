@@ -2,7 +2,7 @@
 
 # Sarah Heidmann
 # Created 16 Aug 2020
-# Last modified 16 Aug 2020
+# Last modified 30 Aug 2020
 
 # My first attempts at exploring Goodreads book data.
 # Recreates Goodreads "stats" plots, and adds a few of my own.
@@ -13,7 +13,7 @@ library(lubridate)
 
 ##### Import the data #####
 # Date format: %Y/%m/%d or %D (m/d/yy)
-books <- read_csv("data/goodreads_library_export_20200816.csv",
+books <- read_csv("data/goodreads_library_export_20200830.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 

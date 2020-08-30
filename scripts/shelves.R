@@ -2,7 +2,7 @@
 
 # Sarah Heidmann
 # Created 16 Aug 2020
-# Last modified 28 Aug 2020
+# Last modified 30 Aug 2020
 
 # Organize books by their bookshelves.
 
@@ -11,7 +11,7 @@ library(tidyverse)
 
 ##### Import the data #####
 # Date format: %Y/%m/%d or %D (m/d/yy)
-books <- read_csv("data/goodreads_library_export_20200816.csv",
+books <- read_csv("data/goodreads_library_export_20200830.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 ##### Tidy the dataset #####
