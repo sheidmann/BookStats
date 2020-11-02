@@ -2,7 +2,7 @@ name: "BookStats"
 navbar:
   title: "BookStats"
   left:
-    - text: "Goodreads Graphs"
+    - text: "Goodreads graphs"
       href: GR_graphs.html
     - text: "What next?"
       href: ReadNext.html
