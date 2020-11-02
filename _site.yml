@@ -1,0 +1,12 @@
+name: "BookStats"
+navbar:
+  title: "BookStats"
+  left:
+    - text: "Goodreads Graphs"
+      href: GR_graphs.html
+    - text: "What next?"
+      href: ReadNext.html
+output_dir: "docs"
+output:
+  html_document:
+    theme: cosmo
