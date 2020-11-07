@@ -1,0 +1,42 @@
+---
+title: "Low Priority"
+author: "Sarah Heidmann"
+output: html_document
+---
+*Data through 7 Nov 2020*
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(knitr)
+books <- read_csv("data/goodreads_library_export_20201107.csv",
+                  col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
+                                   `Date Added`=col_date(format="%Y/%m/%d")))
+widebooks <- books %>%
+      separate_rows("Bookshelves", sep = ", ") %>%
+      select(Bookshelves, Title) %>%
+      mutate(shelflog = 1) %>%
+      pivot_wider(names_from=Bookshelves,
+                  values_from=shelflog) %>%
+      mutate_all(replace_na,0)
+```
+
+## Reverse rankings
+
+Much of my library was added with little thought in 2014 from very old to-read lists I have been keeping my whole life.
+
+To help slowly chip away at books on my list that no longer pique my interest, here is a reverse ranking of books to look at for deletion or better classification:
+```{r lowRanking}
+widebooks %>%
+      left_join(select(books,Title,`Average Rating`), by="Title") %>%
+      filter(`to-read`==1) %>%
+      filter(kindle==0 & library==0 & `st-thomas`==0) %>%
+      mutate(shelves=rowSums(select(.,-Title,-`Average Rating`))) %>%
+      mutate(ranking=(`highly-recommended`*2)+island+`life-changing` +
+             `top-100-lifetime`+`neil-degrasse-tyson`+`award-winning`+
+             `made-into-movie`) %>%
+      select(Title, ranking, shelves,`Average Rating`) %>%
+      arrange(ranking,shelves,`Average Rating`) %>%
+      slice_head(n=20) %>%
+      kable()
+```
+

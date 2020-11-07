@@ -6,6 +6,8 @@ navbar:
       href: GR_graphs.html
     - text: "What next?"
       href: ReadNext.html
+    - text: "Low priority"
+      href: LowPriority.html
 output_dir: "docs"
 output:
   html_document:
