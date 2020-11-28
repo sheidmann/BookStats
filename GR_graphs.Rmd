@@ -105,9 +105,11 @@ books %>%
 ```
 
 ## My extras
-### Most read books (top 10)
+### Most read books
 ```{r MostRead}
 # For now it is all books I have read more than once
+# Eventually I want it to be my top 10
+# Although maybe that's too boring since 7 will be Harry Potter
 books %>%
       arrange(desc(`Read Count`)) %>%
       select(Title, `Read Count`) %>%
@@ -119,7 +121,7 @@ books %>%
       scale_y_continuous(name="Number of Times Read", expand = c(0,0)) +
       theme(panel.background = element_blank(),
             axis.line = element_line(),
-            axis.text.x =element_text(angle=-90),
+            axis.text.x =element_text(angle=-80, hjust=0.05),
             axis.title.x = element_blank())
 ```
 
