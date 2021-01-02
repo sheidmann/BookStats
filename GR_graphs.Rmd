@@ -81,7 +81,8 @@ books %>%
       ggplot(data=.) +
       geom_bar(aes(x=MonthRead, y=BooksRead), stat="identity",
                      fill= "turquoise", color = "blue") +
-      scale_y_continuous(name="Number of Books Read", expand = c(0,0)) +
+      scale_y_continuous(name="Number of Books Read", expand = c(0,0),
+                         breaks = seq(0,30,5), limits = c(0,30)) +
       scale_x_date(date_breaks="1 month", date_labels="%Y-%b", expand=c(0,0)) +
       theme(panel.background = element_blank(),
             axis.line = element_line(),
@@ -97,7 +98,8 @@ books %>%
       ggplot(data=.) +
       geom_bar(aes(x=MonthRead, y=PagesRead), stat="identity",
                fill= "turquoise", color = "blue") +
-      scale_y_continuous(name="Number of Pages Read", expand = c(0,0)) +
+      scale_y_continuous(name="Number of Pages Read", expand = c(0,0),
+                         breaks = seq(0,10000,2500), limits = c(0,10000)) +
       scale_x_date(date_breaks="1 month", date_labels="%Y-%b", expand=c(0,0)) +
       theme(panel.background = element_blank(),
             axis.line = element_line(),
