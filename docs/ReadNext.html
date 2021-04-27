@@ -14,12 +14,22 @@
 
 <title>Which Book To Read?</title>
 
+<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -34,11 +44,6 @@
     </style>
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -51,32 +56,6 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
 
 
 
@@ -87,10 +66,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -107,40 +82,13 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 51px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -168,7 +116,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -180,7 +128,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -191,10 +139,23 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -206,7 +167,6 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -299,7 +259,7 @@ $(document).ready(function () {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -309,18 +269,18 @@ $(document).ready(function () {
 </div>
 
 
-<p><em>Data through 27 Mar 2021</em></p>
-<p>There are 432 books on my Want-To-Read shelf. I have access to 255 of them.</p>
-<p>In the past year, on average, I read a book every 2.1 days. If I continued to read at this rate and added no more books, it would take me 928 days (2.5 years) to finish reading the rest of my list.</p>
-<p>In the same time, I added a book every 3.4 days. If I continued to add and read at this rate, it would take me 2503 days (6.9 years) to finish reading the rest of my list.</p>
+<p><em>Data through 27 Apr 2021</em></p>
+<p>There are 424 books on my Want-To-Read shelf. I have access to 243 of them.</p>
+<p>In the past year, on average, I read a book every 2.1 days. If I continued to read at this rate and added no more books, it would take me 910 days (2.5 years) to finish reading the rest of my list.</p>
+<p>In the same time, I added a book every 3.3 days. If I continued to add and read at this rate, it would take me 2537 days (7 years) to finish reading the rest of my list.</p>
 <div id="highest-rated-books" class="section level2">
 <h2>Highest Rated Books</h2>
 <p>The 10 highest rated unread books in my library that I already have access to:</p>
-<table style="width:100%;">
+<table>
 <colgroup>
-<col width="56%" />
-<col width="14%" />
-<col width="11%" />
+<col width="55%" />
+<col width="16%" />
+<col width="10%" />
 <col width="10%" />
 <col width="6%" />
 </colgroup>
@@ -335,10 +295,10 @@ $(document).ready(function () {
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Four Hundred Souls: A Community History of African America, 1619-2019</td>
-<td align="left">Ibram X. Kendi</td>
-<td align="right">528</td>
-<td align="right">4.68</td>
+<td align="left">Empire of Pain: The Secret History of the Sackler Dynasty</td>
+<td align="left">Patrick Radden Keefe</td>
+<td align="right">512</td>
+<td align="right">4.70</td>
 <td align="left">library</td>
 </tr>
 <tr class="even">
@@ -349,59 +309,59 @@ $(document).ready(function () {
 <td align="left">kindle</td>
 </tr>
 <tr class="odd">
+<td align="left">The House in the Cerulean Sea</td>
+<td align="left">T.J. Klune</td>
+<td align="right">394</td>
+<td align="right">4.53</td>
+<td align="left">library</td>
+</tr>
+<tr class="even">
 <td align="left">In the Dream House</td>
 <td align="left">Carmen Maria Machado</td>
 <td align="right">251</td>
 <td align="right">4.51</td>
 <td align="left">library</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">The Green Mile</td>
 <td align="left">Stephen King</td>
 <td align="right">592</td>
 <td align="right">4.45</td>
 <td align="left">kindle</td>
 </tr>
-<tr class="odd">
-<td align="left">The Final Empire (Mistborn, #1)</td>
-<td align="left">Brandon Sanderson</td>
-<td align="right">544</td>
-<td align="right">4.44</td>
-<td align="left">library</td>
-</tr>
 <tr class="even">
 <td align="left">Grant</td>
 <td align="left">Ron Chernow</td>
 <td align="right">1074</td>
-<td align="right">4.44</td>
+<td align="right">4.43</td>
 <td align="left">kindle</td>
 </tr>
 <tr class="odd">
-<td align="left">The Code Breaker: Jennifer Doudna, Gene Editing, and the Future of the Human Race</td>
-<td align="left">Walter Isaacson</td>
-<td align="right">536</td>
-<td align="right">4.43</td>
+<td align="left">The Disordered Cosmos: A Journey into Dark Matter, Spacetime, and Dreams Deferred</td>
+<td align="left">Chanda Prescod-Weinstein</td>
+<td align="right">320</td>
+<td align="right">4.38</td>
 <td align="left">library</td>
 </tr>
 <tr class="even">
-<td align="left">Drawdown: The Most Comprehensive Plan Ever Proposed to Reverse Global Warming</td>
-<td align="left">Paul Hawken</td>
-<td align="right">256</td>
-<td align="right">4.43</td>
-<td align="left">library</td>
+<td align="left">East of Eden</td>
+<td align="left">John Steinbeck</td>
+<td align="right">601</td>
+<td align="right">4.38</td>
+<td align="left">kindle</td>
 </tr>
 <tr class="odd">
-<td align="left">Entangled Life: How Fungi Make Our Worlds, Change Our Minds &amp; Shape Our Futures</td>
-<td align="left">Merlin Sheldrake</td>
-<td align="right">352</td>
-<td align="right">4.41</td>
-<td align="left">library</td>
+<td align="left">A Thousand Splendid Suns</td>
+<td align="left">Khaled Hosseini</td>
+<td align="right">372</td>
+<td align="right">4.38</td>
+<td align="left">kindle</td>
 </tr>
 <tr class="even">
-<td align="left">Endurance: Shackleton’s Incredible Voyage</td>
-<td align="left">Alfred Lansing</td>
-<td align="right">282</td>
-<td align="right">4.38</td>
+<td align="left">Atomic Habits: An Easy &amp; Proven Way to Build Good Habits &amp; Break Bad Ones</td>
+<td align="left">James Clear</td>
+<td align="right">319</td>
+<td align="right">4.36</td>
 <td align="left">library</td>
 </tr>
 </tbody>
@@ -436,7 +396,7 @@ $(document).ready(function () {
 <td align="left">Anxious People</td>
 <td align="right">4</td>
 <td align="right">341</td>
-<td align="right">4.27</td>
+<td align="right">4.26</td>
 <td align="left">library</td>
 </tr>
 <tr class="even">
@@ -450,7 +410,7 @@ $(document).ready(function () {
 <td align="left">Under a White Sky: The Nature of the Future</td>
 <td align="right">4</td>
 <td align="right">256</td>
-<td align="right">4.21</td>
+<td align="right">4.19</td>
 <td align="left">library</td>
 </tr>
 <tr class="even">
@@ -461,7 +421,7 @@ $(document).ready(function () {
 <td align="left">kindle</td>
 </tr>
 <tr class="odd">
-<td align="left">Ninth House (Alex Stern, #1)</td>
+<td align="left">Ninth House (Alex Stern #1)</td>
 <td align="right">4</td>
 <td align="right">459</td>
 <td align="right">4.04</td>
@@ -482,24 +442,24 @@ $(document).ready(function () {
 <td align="left">kindle</td>
 </tr>
 <tr class="even">
+<td align="left">The House in the Cerulean Sea</td>
+<td align="right">3</td>
+<td align="right">394</td>
+<td align="right">4.53</td>
+<td align="left">library</td>
+</tr>
+<tr class="odd">
 <td align="left">In the Dream House</td>
 <td align="right">3</td>
 <td align="right">251</td>
 <td align="right">4.51</td>
 <td align="left">library</td>
 </tr>
-<tr class="odd">
-<td align="left">The Final Empire (Mistborn, #1)</td>
-<td align="right">3</td>
-<td align="right">544</td>
-<td align="right">4.44</td>
-<td align="left">library</td>
-</tr>
 <tr class="even">
 <td align="left">Grant</td>
 <td align="right">3</td>
 <td align="right">1074</td>
-<td align="right">4.44</td>
+<td align="right">4.43</td>
 <td align="left">kindle</td>
 </tr>
 </tbody>
@@ -533,7 +493,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>

@@ -4,13 +4,13 @@ author: "Sarah Heidmann"
 output: html_document
 ---
 
-*Data through 27 Mar 2021*
+*Data through 27 Apr 2021*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE)
 library(tidyverse)
 library(lubridate)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20210327.csv",
+books <- read_csv("data/goodreads_library_export_20210427.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 ```
@@ -130,17 +130,18 @@ books %>%
 ### Books added/read by month
 ```{r AddRead}
 # I added much of my library in the first few days of using Goodreads.
-# Set an upper limit to exclude those outlier days
-upperLimit <- 40
-ggplot(data=books) +
-      geom_histogram(aes(x=`Date Added`), fill = NA,
-                     color = "blue", binwidth = 30) +
-      geom_histogram(aes(x=`Date Read`), fill = NA,
-                     color = "green", binwidth = 30,
-                     data = filter(books,!(is.na(`Date Read`)))) +
-      scale_y_continuous(limits = c(0,upperLimit), name ="",
-                         expand = c(0,0)) +
-      scale_x_date(date_breaks = "1 month", date_labels = "%Y-%b") +
+# Set a date limit to exclude those outlier days
+books %>%
+   mutate(MonthAdded=round_date(`Date Added`,"month"),
+          MonthRead=round_date(`Date Read`,"month")) %>%
+   ggplot(data=.) +
+      geom_bar(aes(x=MonthAdded,y=..count..), fill = NA,
+                     color = "blue") +
+      geom_bar(aes(x=MonthRead,y=..count..), fill = NA,
+                     color = "green") +
+      scale_y_continuous(name ="",expand = c(0,0)) +
+      scale_x_date(date_breaks = "1 month", date_labels = "%Y-%b",
+                   limits = c(ymd("2014-03-01"),NA), expand=c(0,0)) +
       theme(panel.background = element_blank(),
             axis.line = element_line(),
             axis.text.x =element_text(angle=-90))
