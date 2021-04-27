@@ -165,7 +165,8 @@ add_read <- full_join(addDates, readDates, by= "Month") %>%
 ggplot(data=add_read)+
    geom_line(aes(x=Month,y=diff)) +
    scale_y_continuous(name="Net Books",limits = c(-20,50)) +
-   scale_x_date(date_breaks = "1 month", date_labels = "%Y-%b") +
+   scale_x_date(date_breaks = "1 month", date_labels = "%Y-%b",
+                limits = c(ymd("2014-03-01"),NA), expand=c(0,0)) +
    geom_hline(yintercept=0, color = "blue") +
    theme(panel.background=element_blank(),
          axis.line = element_line(),
