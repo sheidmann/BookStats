@@ -3,12 +3,12 @@ title: "Low Priority"
 author: "Sarah Heidmann"
 output: html_document
 ---
-*Data through 23 May 2021*
+*Data through 28 June 2021*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20210523.csv",
+books <- read_csv("data/goodreads_library_export_20210628.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 widebooks <- books %>%
@@ -29,7 +29,7 @@ To help slowly chip away at books on my list that no longer pique my interest, h
 widebooks %>%
       left_join(select(books,Title,`Average Rating`), by="Title") %>%
       filter(`to-read`==1) %>%
-      filter(kindle==0 & library==0 & `st-thomas`==0) %>%
+      filter(kindle==0 & library==0 & `st-thomas`==0 & `Average Rating`<4) %>%
       mutate(shelves=rowSums(select(.,-Title,-`Average Rating`))) %>%
       mutate(ranking=(`highly-recommended`*2)+island+`life-changing` +
              `top-100-lifetime`+`neil-degrasse-tyson`+`award-winning`+
