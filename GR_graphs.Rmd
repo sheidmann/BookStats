@@ -192,6 +192,23 @@ ggplot(data=wtr)+
          axis.title.x=element_blank())
 ```
 
+### Ratio of want-to-read to read over time
+```{r ratioWTR}
+ratiowtr <- wtr %>%
+      mutate(cumAdded = cumsum(BooksAdded),
+             cumRead = cumsum(BooksRead)) %>%
+      mutate(ratio = (cumAdded - cumRead)/cumRead)
+
+ggplot(data=ratiowtr)+
+   geom_line(aes(x=Month,y=ratio)) +
+   scale_y_continuous(name="Ratio of Want-to-Read to Read") +
+   scale_x_date(date_breaks = "1 month", date_labels = "%Y-%b", expand=c(0,0)) +
+   theme(panel.background=element_blank(),
+         axis.line = element_line(),
+         axis.text.x=element_text(angle=-90),
+         axis.title.x=element_blank())
+```
+
 ### How long is a book on my shelf before reading it?
 ```{r TimeWTR}
 # Histogram view
