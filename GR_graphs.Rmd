@@ -4,58 +4,61 @@ author: "Sarah Heidmann"
 output: html_document
 ---
 
-*Data through 28 Aug 2022*
+*Data through 3 Oct 2022*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE)
 library(tidyverse)
 library(lubridate)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20220828.csv",
+books <- read_csv("data/goodreads_library_export_20221003.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 # Manually add additional dates for rereads
 reread_dates <- tribble(
-      ~Index, ~Date,
-      1, "2019-01-19", # Dealing w Dragons
-      2, "2021-05-15", # Da Vinci Code
-      3, "2018-04-15", # Harry 1
-      4, "2019-10-03", # Harry 1
-      5, "2018-04-15", # Harry 2
-      6, "2019-10-04", # Harry 2
-      7, "2018-04-19", # Harry 3
-      8, "2019-10-04", # Harry 3
-      9, "2018-04-25", # Harry 4
-      10, "2019-10-08", # Harry 4
-      11, "2018-05-03", # Harry 5
-      12, "2019-10-15", # Harry 5
-      13, "2018-05-06", # Harry 6
-      14, "2019-10-19", # Harry 6
-      15, "2018-05-08", # Harry 7
-      16, "2019-10-26", # Harry 7
-      17, "2020-08-21", # Eragon
-      18, "2021-01-28", # Dune
-      19, NA, # Ender's Game 
-      20, "2017-05-20", # Little Prince
-      21, "2020-12-21", # Little Prince
-      22, NA, # Hobbit
-      23, NA, # Fahrenheit 451
-      24, NA, # Night
-      25, "2021-08-12", # Wrinkle in Time
-      26, "2018-05-26", # Sun and Her Flowers
-      27, "2019-08-21", # Sun and Her Flowers
-      28, NA, # Brave New World
-      29, "2020-12-02", # Brave New World
-      30, "2019-07-06", # Fifth Season
-      31, NA, # Once Upon a Marigold
-      32, NA, # House of the Scorpion
-      33, "2021-12-05", # Eye of World
-      34, "2020-07-30", # AART
-      35, "2021-01-29", # Murderbot
-      36, NA, # Giver
-      37, NA, # Animal Farm
-      38, NA, # Sherlock 3
-      39, NA # Hot Zone
+      ~Date,
+      NA, # Fellowship of the Ring
+      "2019-01-19", # Dealing w Dragons
+      "2021-05-15", # Da Vinci Code
+      "2018-04-15", # Harry 1
+      "2019-10-03", # Harry 1
+      "2018-04-15", # Harry 2
+      "2019-10-04", # Harry 2
+      "2018-04-19", # Harry 3
+      "2019-10-04", # Harry 3
+      "2018-04-25", # Harry 4
+      "2019-10-08", # Harry 4
+      "2018-05-03", # Harry 5
+      "2019-10-15", # Harry 5
+      "2018-05-06", # Harry 6
+      "2019-10-19", # Harry 6
+      "2018-05-08", # Harry 7
+      "2019-10-26", # Harry 7
+      "2020-08-21", # Eragon
+      "2021-01-28", # Dune
+      NA, # Ender's Game 
+      NA, # Hobbit
+      "2022-09-24", # Hobbit
+      "2017-05-20", # Little Prince
+      "2020-12-21", # Little Prince
+      NA, # Fahrenheit 451
+      NA, # Night
+      "2021-08-12", # Wrinkle in Time
+      "2018-05-26", # Sun and Her Flowers
+      "2019-08-21", # Sun and Her Flowers
+      NA, # Brave New World
+      "2020-12-02", # Brave New World
+      "2019-07-06", # Fifth Season
+      NA, # Once Upon a Marigold
+      NA, # House of the Scorpion
+      "2021-12-05", # Eye of World
+      "2020-07-30", # AART
+      "2021-01-29", # Murderbot
+      NA, # Giver
+      NA, # Animal Farm
+      NA, # Sherlock 3
+      NA # Hot Zone
 ) %>%
+      add_column(Index = seq(1:nrow(.))) %>% 
       mutate(Date = date(Date))
 rereads <- books %>% 
       filter(`Read Count` > 1) %>%
