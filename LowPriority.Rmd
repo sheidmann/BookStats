@@ -40,3 +40,23 @@ widebooks %>%
       kable()
 ```
 
+## Books to look for
+
+Now let's reverse that. There are many books I don't have that may be worth looking harder for or buying.
+
+Here is a ranking of books to find a way to get access to:
+```{r toFind}
+widebooks %>%
+      left_join(select(books,Title,`Average Rating`), by="Title") %>%
+      filter(`to-read`==1) %>%
+      filter(kindle==0 & library==0 & `st-thomas`==0 & `Average Rating`>4) %>%
+      mutate(shelves=rowSums(select(.,-Title,-`Average Rating`))) %>%
+      mutate(ranking=(`highly-recommended`*2)+island+`life-changing` +
+             `top-100-lifetime`+`neil-degrasse-tyson`+`award-winning`+
+             `made-into-movie`) %>%
+      select(Title, ranking, shelves,`Average Rating`) %>%
+      arrange(desc(ranking),shelves,`Average Rating`) %>%
+      slice_head(n=20) %>%
+      kable()
+```
+
