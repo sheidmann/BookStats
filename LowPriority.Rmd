@@ -3,12 +3,12 @@ title: "Low Priority"
 author: "Sarah Heidmann"
 output: html_document
 ---
-*Data through 1 Nov 2022*
+*Data through 27 Nov 2022*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20221101.csv",
+books <- read_csv("data/goodreads_library_export_20221127.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 widebooks <- books %>%
@@ -29,10 +29,11 @@ To help slowly chip away at books on my list that no longer pique my interest, h
 widebooks %>%
       left_join(select(books,Title,`Average Rating`), by="Title") %>%
       filter(`to-read`==1) %>%
-      filter(kindle==0 & library==0 & `st-thomas`==0 & `Average Rating`<4) %>%
+      filter(kindle==0 & library==0 & `st-thomas`==0 & audible==0 & 
+                   `Average Rating`<4) %>%
       mutate(shelves=rowSums(select(.,-Title,-`Average Rating`))) %>%
       mutate(ranking=(`highly-recommended`*2)+island+`life-changing` +
-             `top-100-lifetime`+`neil-degrasse-tyson`+`award-winning`+
+             `top-100-lifetime`+`award-winning`+
              `made-into-movie`) %>%
       select(Title, ranking, shelves,`Average Rating`) %>%
       arrange(ranking,shelves,`Average Rating`) %>%
@@ -49,10 +50,11 @@ Here is a ranking of books to find a way to get access to:
 widebooks %>%
       left_join(select(books,Title,`Average Rating`), by="Title") %>%
       filter(`to-read`==1) %>%
-      filter(kindle==0 & library==0 & `st-thomas`==0 & `Average Rating`>4) %>%
+      filter(kindle==0 & library==0 & `st-thomas`==0 & audible==0 & 
+                   `Average Rating`>4) %>%
       mutate(shelves=rowSums(select(.,-Title,-`Average Rating`))) %>%
       mutate(ranking=(`highly-recommended`*2)+island+`life-changing` +
-             `top-100-lifetime`+`neil-degrasse-tyson`+`award-winning`+
+             `top-100-lifetime`+`award-winning`+
              `made-into-movie`) %>%
       select(Title, ranking, shelves,`Average Rating`) %>%
       arrange(desc(ranking),shelves,`Average Rating`) %>%
