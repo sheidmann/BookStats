@@ -3,12 +3,12 @@ title: "Low Priority"
 author: "Sarah Heidmann"
 output: html_document
 ---
-*Data through 27 Nov 2022*
+*Data through 31 Dec 2022*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20221127.csv",
+books <- read_csv("data/goodreads_library_export_20221231.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 widebooks <- books %>%
@@ -22,7 +22,7 @@ widebooks <- books %>%
 
 ## Reverse rankings
 
-Much of my library was added in 2014 assembled with little thought from very old to-read lists I have been keeping my whole life.
+Much of my library was added in 2014, assembled with little thought from very old to-read lists I have been keeping my whole life.
 
 To help slowly chip away at books on my list that no longer pique my interest, here is a reverse ranking of books to look at for deletion or better classification:
 ```{r lowRanking}
@@ -33,7 +33,7 @@ widebooks %>%
                    `Average Rating`<4) %>%
       mutate(shelves=rowSums(select(.,-Title,-`Average Rating`))) %>%
       mutate(ranking=(`highly-recommended`*2)+island+`life-changing` +
-             `top-100-lifetime`+`award-winning`+
+             `top-100-lifetime`+`award-winning`+`brain-scoop`+`from-mike`+
              `made-into-movie`) %>%
       select(Title, ranking, shelves,`Average Rating`) %>%
       arrange(ranking,shelves,`Average Rating`) %>%
@@ -54,7 +54,7 @@ widebooks %>%
                    `Average Rating`>4) %>%
       mutate(shelves=rowSums(select(.,-Title,-`Average Rating`))) %>%
       mutate(ranking=(`highly-recommended`*2)+island+`life-changing` +
-             `top-100-lifetime`+`award-winning`+
+             `top-100-lifetime`+`award-winning`+`brain-scoop`+`from-mike`+
              `made-into-movie`) %>%
       select(Title, ranking, shelves,`Average Rating`) %>%
       arrange(desc(ranking),shelves,`Average Rating`) %>%
