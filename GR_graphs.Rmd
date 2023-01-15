@@ -4,16 +4,17 @@ author: "Sarah Heidmann"
 output: html_document
 ---
 
-*Data through 31 Dec 2022*
+*Data through 15 Jan 2023*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE)
 library(tidyverse)
 library(lubridate)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20221231.csv",
+books <- read_csv("data/goodreads_library_export_20230115.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 # Manually add additional dates for rereads
+# Goodreads saves the first date so I have to add later dates
 reread_dates <- tribble(
       ~Date,
       "2022-10-15", # Fellowship of the Ring
@@ -33,6 +34,7 @@ reread_dates <- tribble(
       "2019-10-19", # Harry 6
       "2018-05-08", # Harry 7
       "2019-10-26", # Harry 7
+      "2023-01-02", #Jurassic Park
       "2020-08-21", # Eragon
       "2021-01-28", # Dune
       NA, # Ender's Game 
@@ -56,21 +58,29 @@ reread_dates <- tribble(
       NA, # Giver
       NA, # Animal Farm
       NA, # Sherlock 3
-      NA # Hot Zone
+      "2023-01-12", # Atomic Habits
+      NA, # Hot Zone
+      "2022-12-25" # Almanack of Naval
 ) %>%
       add_column(Index = seq(1:nrow(.))) %>% 
       mutate(Date = date(Date))
 rereads <- books %>% 
       filter(`Read Count` > 1) %>%
-      arrange(`Date Read`) %>%
+      arrange(`Date Read`) %>% # Run up to here when fixing above table
       uncount(`Read Count`-1) %>% # Must subtract 1 so merging doesn't duplicate
       mutate(`Date Read`=replace(`Date Read`,
                                  reread_dates$Index, reread_dates$Date)) %>%
       bind_rows(books)
+
+thisyear <- rereads %>% 
+      filter(year(`Date Read`)==(year(today()))) %>% 
+      nrow()
 ```
 
 ## Goodreads redone
 ### Books and pages read each year
+
+In 2023, I've read `r thisyear` books so far. If I keep up this pace, I will finish `r round(thisyear / yday(today()) * 365, 0)` books by the end of this year.
 
 ```{r BooksAndPagesYear}
 minYear <- year(min(books$`Date Read`, na.rm = TRUE))
