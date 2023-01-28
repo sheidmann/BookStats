@@ -3,12 +3,12 @@ title: "Low Priority"
 author: "Sarah Heidmann"
 output: html_document
 ---
-*Data through 15 Jan 2023*
+*Data through 28 Jan 2023*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20230115.csv",
+books <- read_csv("data/goodreads_library_export_20230128.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 widebooks <- books %>%
