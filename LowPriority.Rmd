@@ -3,12 +3,12 @@ title: "Low Priority"
 author: "Sarah Heidmann"
 output: html_document
 ---
-*Data through 12 Feb 2023*
+*Data through 1 Mar 2023*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20230212.csv",
+books <- read_csv("data/goodreads_library_export_20230301.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 widebooks <- books %>%
@@ -29,7 +29,8 @@ To help slowly chip away at books on my list that no longer pique my interest, h
 widebooks %>%
       left_join(select(books,Title,`Average Rating`), by="Title") %>%
       filter(`to-read`==1) %>%
-      filter(kindle==0 & library==0 & `st-thomas`==0 & audible==0 & 
+      filter(kindle==0 & library==0 & `st-thomas`==0 & 
+                   audible==0 & `library-open`==0 & 
                    `Average Rating`<4) %>%
       mutate(shelves=rowSums(select(.,-Title,-`Average Rating`))) %>%
       mutate(ranking=(`highly-recommended`*2)+island+`life-changing` +
@@ -50,7 +51,8 @@ Here is a ranking of books to find a way to get access to:
 widebooks %>%
       left_join(select(books,Title,`Average Rating`), by="Title") %>%
       filter(`to-read`==1) %>%
-      filter(kindle==0 & library==0 & `st-thomas`==0 & audible==0 & 
+      filter(kindle==0 & library==0 & `st-thomas`==0 & 
+                   audible==0 & `library-open`==0 &
                    `Average Rating`>4) %>%
       mutate(shelves=rowSums(select(.,-Title,-`Average Rating`))) %>%
       mutate(ranking=(`highly-recommended`*2)+island+`life-changing` +
