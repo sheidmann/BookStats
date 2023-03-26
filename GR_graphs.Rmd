@@ -4,13 +4,13 @@ author: "Sarah Heidmann"
 output: html_document
 ---
 
-*Data through 1 Mar 2023*
+*Data through 26 Mar 2023*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE)
 library(tidyverse)
 library(lubridate)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20230301.csv",
+books <- read_csv("data/goodreads_library_export_20230326.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 # Manually add additional dates for rereads
@@ -19,14 +19,15 @@ reread_dates <- tribble(
       ~Date,
       "2022-10-15", # Fellowship of the Ring
       "2023-02-16", # Two Towers
+      "2023-03-05", # Return of the King
       "2019-01-19", # Dealing w Dragons
       "2021-05-15", # Da Vinci Code
       "2018-04-15", "2019-10-03", "2023-02-26", # Harry 1
       "2018-04-15", "2019-10-04", "2023-02-27", # Harry 2
       "2018-04-19", "2019-10-04", "2023-02-28", # Harry 3
-      "2018-04-25", "2019-10-08", NA, # Harry 4
-      "2018-05-03", "2019-10-15", # Harry 5
-      "2018-05-06", "2019-10-19", # Harry 6
+      "2018-04-25", "2019-10-08", "2023-03-07", # Harry 4
+      "2018-05-03", "2019-10-15", "2023-03-26", # Harry 5
+      "2018-05-06", "2019-10-19", NA, # Harry 6
       "2018-05-08", "2019-10-26", # Harry 7
       "2023-01-02", #Jurassic Park
       "2020-08-21", # Eragon
@@ -44,7 +45,7 @@ reread_dates <- tribble(
       NA, # House of the Scorpion
       "2021-12-05", # Eye of World
       "2020-07-30", # AART
-      "2021-01-29", # Murderbot
+      "2021-01-29", # Murderbot 1
       NA, # Giver
       NA, # Animal Farm
       NA, # Sherlock 3
