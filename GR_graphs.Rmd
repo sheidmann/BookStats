@@ -4,13 +4,13 @@ author: "Sarah Heidmann"
 output: html_document
 ---
 
-*Data through 26 Mar 2023*
+*Data through 29 Apr 2023*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE)
 library(tidyverse)
 library(lubridate)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20230326.csv",
+books <- read_csv("data/goodreads_library_export_20230429.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 # Manually add additional dates for rereads
@@ -27,8 +27,8 @@ reread_dates <- tribble(
       "2018-04-19", "2019-10-04", "2023-02-28", # Harry 3
       "2018-04-25", "2019-10-08", "2023-03-07", # Harry 4
       "2018-05-03", "2019-10-15", "2023-03-26", # Harry 5
-      "2018-05-06", "2019-10-19", NA, # Harry 6
-      "2018-05-08", "2019-10-26", # Harry 7
+      "2018-05-06", "2019-10-19", "2023-04-11", # Harry 6
+      "2018-05-08", "2019-10-26", "2023-04-21", # Harry 7
       "2023-01-02", #Jurassic Park
       "2020-08-21", # Eragon
       "2021-01-28", # Dune
@@ -52,7 +52,9 @@ reread_dates <- tribble(
       "2023-01-12", # Atomic Habits
       "2023-01-26", # How Stella Learned to Talk
       NA, # Hot Zone
-      "2022-12-25" # Almanack of Naval
+      "2023-04-29", # Why Fish Don't Exist
+      "2022-12-25", # Almanack of Naval
+      "2023-04-19" # True Grit
 ) %>%
       add_column(Index = seq(1:nrow(.))) %>% 
       mutate(Date = date(Date))
@@ -252,8 +254,9 @@ ggplot(data=wtr)+
          axis.title.x=element_blank())
 ```
 
+
+```{r ratioWTR, eval = FALSE}
 ### Ratio of want-to-read to read over time
-```{r ratioWTR}
 ratiowtr <- wtr %>%
       mutate(cumAdded = cumsum(BooksAdded),
              cumRead = cumsum(BooksRead)) %>%
@@ -269,8 +272,9 @@ ggplot(data=ratiowtr)+
          axis.title.x=element_blank())
 ```
 
+
+```{r TimeWTR, eval = FALSE}
 ### How long is a book on my shelf before reading it?
-```{r TimeWTR}
 # Histogram view
 books %>%
    filter(!is.na(`Date Read`)) %>%
