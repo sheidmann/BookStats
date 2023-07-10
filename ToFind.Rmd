@@ -3,12 +3,12 @@ title: "To Find"
 author: "Sarah Heidmann"
 output: html_document
 ---
-*Data through 29 Apr 2023*
+*Data through 10 Jul 2023*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20230429.csv",
+books <- read_csv("data/goodreads_library_export_20230710.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 widebooks <- books %>%
