@@ -4,13 +4,13 @@ author: "Sarah Heidmann"
 output: html_document
 ---
 
-*Data through 26 Aug 2023*
+*Data through 29 Sep 2023*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE)
 library(tidyverse)
 library(lubridate)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20230826.csv",
+books <- read_csv("data/goodreads_library_export_20230929.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 # Manually add additional dates for rereads
@@ -45,11 +45,14 @@ reread_dates <- tribble(
       NA, # Once Upon a Marigold
       NA, # House of the Scorpion
       "2021-12-05", # Eye of World
+      NA, # Sapiens
       "2020-07-30", # AART
       "2021-01-29", # Murderbot 1
       NA, # Giver
       NA, # Animal Farm
       NA, # Sherlock 3
+      NA, # On Writing Well
+      "2023-09-29", # Foundation
       "2023-01-12", # Atomic Habits
       "2023-01-26", # How Stella Learned to Talk
       NA, # Hot Zone
@@ -64,7 +67,7 @@ test <- books %>%
       filter(`Read Count` > 1) %>%
       arrange(`Date Read`) %>% # Run up to here when fixing above table
       uncount(`Read Count`-1)
-nrow(test)==nrow(reread_dates)
+nrow(test)==nrow(reread_dates) # should be true
 # Add the dates
 rereads <- books %>% 
       filter(`Read Count` > 1) %>%
@@ -180,14 +183,18 @@ rereads %>%
 # Although maybe that's too boring since 7 will be Harry Potter
 books %>%
       arrange(desc(`Read Count`)) %>%
-      select(Title, `Read Count`) %>%
+      select(Title, `Read Count`, `Date Read`) %>%
       filter(`Read Count` >1) %>%
       # Shorten titles for easier plotting
       # Extract everything before parentheses or colon
       mutate(Title = str_split(Title, "[(]", simplify=TRUE)[,1],
              Title = str_split(Title, "[:]", simplify=TRUE)[,1]) %>% 
+      # Arrange plot by read count, then original date read
+      arrange(desc(`Read Count`), `Date Read`) %>% 
+      mutate(Title = factor(Title, levels = unique(Title))) %>% 
+      # Make the plot
       ggplot(data=.) +
-      geom_bar(aes(x=reorder(Title, -`Read Count`), y=`Read Count`), 
+      geom_bar(aes(x=Title, y=`Read Count`), 
                stat="identity",
                fill= "turquoise", color = "blue") +
       scale_y_continuous(name="Number of Times Read", expand = c(0,0)) +

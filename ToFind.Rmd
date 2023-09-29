@@ -3,12 +3,12 @@ title: "To Find"
 author: "Sarah Heidmann"
 output: html_document
 ---
-*Data through 26 Aug 2023*
+*Data through 29 Sep 2023*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20230826.csv",
+books <- read_csv("data/goodreads_library_export_20230929.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 widebooks <- books %>%
@@ -22,7 +22,7 @@ widebooks <- books %>%
 
 ## Reverse rankings
 
-Much of my library was added in 2014, assembled with little thought from very old to-read lists I have been keeping my whole life.
+Much of my library was added in 2014, assembled with abandon from very old to-read lists I have been keeping my whole life.
 
 To help slowly chip away at books on my list that no longer pique my interest, here is a reverse ranking of books to look at for deletion or better classification:
 ```{r lowRanking}
@@ -44,7 +44,7 @@ widebooks %>%
 
 ## Books to look for
 
-Now let's reverse that. There are many books I don't have that may be worth looking harder for or buying.
+Now let's reverse that. There are many books I don't have that may be worth buying or looking harder for.
 
 Here is a ranking of books to find a way to get access to:
 ```{r toFind}
@@ -59,7 +59,7 @@ widebooks %>%
              `top-100-lifetime`+`award-winning`+`brain-scoop`+`from-mike`+
              `made-into-movie`) %>%
       select(Title, ranking, shelves,`Average Rating`) %>%
-      arrange(desc(ranking),shelves,`Average Rating`) %>%
+      arrange(desc(ranking),desc(shelves),desc(`Average Rating`)) %>%
       slice_head(n=20) %>%
       kable()
 ```
