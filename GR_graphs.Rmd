@@ -4,13 +4,13 @@ author: "Sarah Heidmann"
 output: html_document
 ---
 
-*Data through 28 Oct 2023*
+*Data through 27 Nov 2023*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE)
 library(tidyverse)
 library(lubridate)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20231028.csv",
+books <- read_csv("data/goodreads_library_export_20231127.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 # Manually add additional dates for rereads
@@ -51,6 +51,7 @@ reread_dates <- tribble(
       NA, # Giver
       NA, # Animal Farm
       NA, # Sherlock 3
+      "2023-11-24", # Expecting Better
       NA, # On Writing Well
       "2023-09-29", # Foundation
       "2023-01-12", # Atomic Habits
@@ -73,7 +74,7 @@ nrow(test)==nrow(reread_dates) # should be true
 # Add the dates
 rereads <- books %>% 
       filter(`Read Count` > 1) %>%
-      arrange(`Date Read`) %>% # Run up to here when fixing above table
+      arrange(`Date Read`) %>% 
       uncount(`Read Count`-1) %>% # Must subtract 1 so merging doesn't duplicate
       mutate(`Date Read`=replace(`Date Read`,
                                  reread_dates$Index, reread_dates$Date)) %>%
