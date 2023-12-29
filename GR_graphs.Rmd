@@ -155,7 +155,7 @@ rereads %>%
                      fill= "turquoise", color = "blue") +
       scale_y_continuous(name="Number of Books Read", expand = c(0,0),
                          breaks = seq(0,35,5), limits = c(0,35)) +
-      scale_x_date(date_breaks="1 month", date_labels="%Y-%b", expand=c(0,0)) +
+      scale_x_date(date_breaks="4 months", date_labels="%Y-%b", expand=c(0,0)) +
       theme(panel.background = element_blank(),
             axis.line = element_line(),
             axis.text.x =element_text(angle=-90))
@@ -172,7 +172,7 @@ rereads %>%
                fill= "turquoise", color = "blue") +
       scale_y_continuous(name="Number of Pages Read", expand = c(0,0),
                          breaks = seq(0,10000,2500), limits = c(0,12000)) +
-      scale_x_date(date_breaks="1 month", date_labels="%Y-%b", expand=c(0,0)) +
+      scale_x_date(date_breaks="4 months", date_labels="%Y-%b", expand=c(0,0)) +
       theme(panel.background = element_blank(),
             axis.line = element_line(),
             axis.text.x =element_text(angle=-90))
@@ -220,7 +220,7 @@ books %>%
       geom_bar(aes(x=MonthRead,y=..count..), fill = NA,
                      color = "green") +
       scale_y_continuous(name ="",expand = c(0,0)) +
-      scale_x_date(date_breaks = "1 month", date_labels = "%Y-%b",
+      scale_x_date(date_breaks = "4 months", date_labels = "%Y-%b",
                    limits = c(ymd("2014-03-01"),NA), expand=c(0,0)) +
       theme(panel.background = element_blank(),
             axis.line = element_line(),
@@ -245,7 +245,7 @@ add_read <- full_join(addDates, readDates, by= "Month") %>%
 ggplot(data=add_read)+
    geom_line(aes(x=Month,y=diff)) +
    scale_y_continuous(name="Net Books",limits = c(-20,50)) +
-   scale_x_date(date_breaks = "1 month", date_labels = "%Y-%b",
+   scale_x_date(date_breaks = "4 months", date_labels = "%Y-%b",
                 limits = c(ymd("2014-03-01"),NA), expand=c(0,0)) +
    geom_hline(yintercept=0, color = "blue") +
    theme(panel.background=element_blank(),
@@ -264,7 +264,7 @@ wtr <- add_read %>%
 ggplot(data=wtr)+
    geom_line(aes(x=Month,y=cumdiff)) +
    scale_y_continuous(name="Want to Read") +
-   scale_x_date(date_breaks = "1 month", date_labels = "%Y-%b", expand=c(0,0)) +
+   scale_x_date(date_breaks = "4 months", date_labels = "%Y-%b", expand=c(0,0)) +
    geom_hline(yintercept=max(wtr$cumdiff), color="blue") +
    theme(panel.background=element_blank(),
          axis.line = element_line(),
@@ -283,7 +283,7 @@ ratiowtr <- wtr %>%
 ggplot(data=ratiowtr)+
    geom_line(aes(x=Month,y=ratio)) +
    scale_y_continuous(name="Ratio of Want-to-Read to Read") +
-   scale_x_date(date_breaks = "1 month", date_labels = "%Y-%b", expand=c(0,0)) +
+   scale_x_date(date_breaks = "4 months", date_labels = "%Y-%b", expand=c(0,0)) +
    theme(panel.background=element_blank(),
          axis.line = element_line(),
          axis.text.x=element_text(angle=-90),
