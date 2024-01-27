@@ -4,13 +4,13 @@ author: "Sarah Heidmann"
 output: html_document
 ---
 
-*Data through 29 Dec 2023*
+*Data through 27 Jan 2024*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE)
 library(tidyverse)
 library(lubridate)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20231229.csv",
+books <- read_csv("data/goodreads_library_export_20240127.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 # Manually add additional dates for rereads
@@ -21,7 +21,6 @@ reread_dates <- tribble(
       "2023-02-16", # Two Towers
       "2023-03-05", # Return of the King
       "2023-05-14", # Great Gatsby
-      "2019-01-19", # Dealing w Dragons
       "2021-05-15", # Da Vinci Code
       "2018-04-15", "2019-10-03", "2023-02-26", # Harry 1
       "2018-04-15", "2019-10-04", "2023-02-27", # Harry 2
@@ -33,34 +32,36 @@ reread_dates <- tribble(
       "2023-01-02", #Jurassic Park
       "2020-08-21", # Eragon
       "2021-01-28", # Dune
-      NA, # Ender's Game 
-      NA, "2022-09-24", # Hobbit
       "2017-05-20", "2020-12-21", # Little Prince
-      NA, # Fahrenheit 451
-      NA, # Night
       "2021-08-12", # Wrinkle in Time
       "2018-05-26", "2019-08-21", # Sun and Her Flowers
-      NA, "2020-12-02", # Brave New World
       "2019-07-06", # Fifth Season
+      "2024-01-27", # Originals
       NA, # Once Upon a Marigold
       NA, # House of the Scorpion
+      "2019-01-19", # Dealing w Dragons
       "2021-12-05", # Eye of World
       "2023-09-30", # Sapiens
       "2020-07-30", # AART
       "2021-01-29", # Murderbot 1
       NA, # Giver
-      NA, # Animal Farm
-      NA, # Sherlock 3
       "2023-11-24", # Expecting Better
       "2023-11-28", # On Writing Well
       "2023-09-29", # Foundation
       "2023-01-12", # Atomic Habits
       "2023-10-21", # The End of Everything
       "2023-01-26", # How Stella Learned to Talk
-      NA, # Hot Zone
       "2023-04-29", # Why Fish Don't Exist
       "2022-12-25", # Almanack of Naval
-      "2023-04-19" # True Grit
+      "2023-04-19", # True Grit
+      "2018-03-05", # Night
+      "2017-05-07", # Ender's Game 
+      "2017-05-20", "2022-09-24", # Hobbit
+      "2022-01-02", # Hot Zone
+      "2017-08-12", # Fahrenheit 451
+      "2018-06-24", "2020-12-02", # Brave New World
+      "2020-05-12", # Sherlock 3
+      "2020-05-05" # Animal Farm
 ) %>%
       add_column(Index = seq(1:nrow(.))) %>% 
       mutate(Date = date(Date))
@@ -134,6 +135,7 @@ rereads %>%
       ggplot(data=.) +
       geom_point(aes(x=`Date Read`, y=`Original Publication Year`),
                  color = "blue") +
+      scale_x_date(date_breaks="2 years", date_labels = "%Y") +
       scale_y_continuous(name="Publication Date", expand = c(0,0),
                          limits = c(earliestPub, maxYear+1)) +
       theme(panel.background = element_blank(),
