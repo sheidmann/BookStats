@@ -4,13 +4,13 @@ author: "Sarah Heidmann"
 output: html_document
 ---
 
-*Data through 27 Jan 2024*
+*Data through 26 Feb 2024*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE)
 library(tidyverse)
 library(lubridate)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20240127.csv",
+books <- read_csv("data/goodreads_library_export_20240226.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 # Manually add additional dates for rereads
@@ -92,7 +92,8 @@ thisyear <- rereads %>%
 In 2023, I've read `r thisyear` books so far. If I keep up this pace, I will finish `r round(thisyear / yday(today()) * 365, 0)` books by the end of this year.
 
 ```{r BooksAndPagesYear}
-minYear <- year(min(books$`Date Read`, na.rm = TRUE))
+#minYear <- year(min(books$`Date Read`, na.rm = TRUE))
+minYear <- year(ymd("2014-03-01"))
 maxYear <- year(max(books$`Date Read`, na.rm = TRUE))
 
 # Books per year
@@ -103,7 +104,7 @@ rereads %>%
       geom_histogram(aes(x=YearRead), binwidth=1,
                      fill= "turquoise", color = "blue") +
       scale_y_continuous(name="Number of Books Read", expand = c(0,0)) +
-      scale_x_continuous(name= "",
+      scale_x_continuous(name= "", limits = c(minYear,maxYear),
                          breaks = seq(minYear,maxYear,1),
                          labels = seq(minYear,maxYear,1)) +
       theme(panel.background = element_blank(),
@@ -117,7 +118,7 @@ rereads %>%
       geom_bar(aes(x=YearRead, y=`Number of Pages`), stat="identity",
                      fill= "turquoise", color = "blue") +
       scale_y_continuous(name="Number of Pages Read", expand = c(0,0)) +
-      scale_x_continuous(name= "",
+      scale_x_continuous(name= "", limits = c(minYear,maxYear),
                          breaks = seq(minYear,maxYear,1),
                          labels = seq(minYear,maxYear,1)) +
       theme(panel.background = element_blank(),
@@ -142,6 +143,23 @@ rereads %>%
             axis.line = element_line())
 ```
 
+### Read vs unread by publication year
+```{r ReadUnreadPubYear}
+rereads %>% 
+      ggplot(data=.,aes(x=`Original Publication Year`, 
+                        fill=as.character(`Read Count`))) +
+      geom_histogram(binwidth=5) +
+      scale_x_continuous(name="Publication Date", expand = c(0,0),
+                         limits = c(earliestPub, maxYear+1))+
+      scale_fill_discrete(name="Read Count")+
+      scale_y_continuous(expand = c(0,0)) +
+      #guides(fill="none") +
+      theme(panel.background = element_blank(),
+            axis.line = element_line(),
+            legend.position="bottom")
+```
+
+
 ### Books and pages read each month
 
 ```{r BooksAndPagesMonth}
@@ -157,7 +175,9 @@ rereads %>%
                      fill= "turquoise", color = "blue") +
       scale_y_continuous(name="Number of Books Read", expand = c(0,0),
                          breaks = seq(0,35,5), limits = c(0,35)) +
-      scale_x_date(date_breaks="4 months", date_labels="%Y-%b", expand=c(0,0)) +
+      scale_x_date(date_breaks="4 months", date_labels="%Y-%b", expand=c(0,0),
+                   limits=c(as.Date(paste0(minYear,"-01-01")),
+                            as.Date(paste0(maxYear,"-12-31")))) +
       theme(panel.background = element_blank(),
             axis.line = element_line(),
             axis.text.x =element_text(angle=-90))
@@ -174,7 +194,9 @@ rereads %>%
                fill= "turquoise", color = "blue") +
       scale_y_continuous(name="Number of Pages Read", expand = c(0,0),
                          breaks = seq(0,10000,2500), limits = c(0,12000)) +
-      scale_x_date(date_breaks="4 months", date_labels="%Y-%b", expand=c(0,0)) +
+      scale_x_date(date_breaks="4 months", date_labels="%Y-%b", expand=c(0,0),
+                   limits=c(as.Date(paste0(minYear,"-01-01")),
+                            as.Date(paste0(maxYear,"-12-31")))) +
       theme(panel.background = element_blank(),
             axis.line = element_line(),
             axis.text.x =element_text(angle=-90))
@@ -256,6 +278,24 @@ ggplot(data=add_read)+
          axis.title.x=element_blank())
 ```
 
+### Does add rate correlate with read rate?
+```{r corAddRead}
+add_read %>% 
+      filter(Month > as.Date("2018-06-01")) %>% 
+      ggplot(data=., aes(x=BooksRead, y=BooksAdded)) +
+      geom_point()+
+      geom_smooth(method="lm", formula = y~x) +
+      scale_x_continuous(breaks = seq(0,30,5)) +
+      theme(panel.background=element_blank(),
+            axis.line = element_line())
+add_read_cor <- add_read %>%
+      filter(Month > as.Date("2018-06-01")) %>%
+      cor.test(formula= ~ BooksAdded + BooksRead, data= .,
+               alternative = "two.sided", method = "spearman")
+```
+  
+I do seem to add more books in months when I read more books (Spearman's rank correlation, rho= `r round(add_read_cor$estimate,2)`, p= `r round(add_read_cor$p.value,2)`).
+
 ### Cumulative want-to-read
 ```{r CumWTR}
 wtr <- add_read %>%
@@ -266,7 +306,9 @@ wtr <- add_read %>%
 ggplot(data=wtr)+
    geom_line(aes(x=Month,y=cumdiff)) +
    scale_y_continuous(name="Want to Read") +
-   scale_x_date(date_breaks = "4 months", date_labels = "%Y-%b", expand=c(0,0)) +
+   scale_x_date(date_breaks = "4 months", date_labels = "%Y-%b", expand=c(0,0),
+                limits=c(as.Date(paste0(minYear,"-01-01")),
+                            as.Date(paste0(maxYear,"-12-31")))) +
    geom_hline(yintercept=max(wtr$cumdiff), color="blue") +
    theme(panel.background=element_blank(),
          axis.line = element_line(),
@@ -285,7 +327,9 @@ ratiowtr <- wtr %>%
 ggplot(data=ratiowtr)+
    geom_line(aes(x=Month,y=ratio)) +
    scale_y_continuous(name="Ratio of Want-to-Read to Read") +
-   scale_x_date(date_breaks = "4 months", date_labels = "%Y-%b", expand=c(0,0)) +
+   scale_x_date(date_breaks = "4 months", date_labels = "%Y-%b", expand=c(0,0),
+                limits=c(as.Date(paste0(minYear,"-01-01")),
+                            as.Date(paste0(maxYear,"-12-31")))) +
    theme(panel.background=element_blank(),
          axis.line = element_line(),
          axis.text.x=element_text(angle=-90),
@@ -334,3 +378,27 @@ rereads %>%
             axis.line = element_line())
 ```
 
+## Average books added by month
+```{r BooksAddMonth}
+rereads %>%
+      filter(`Date Added` >= ymd("2015-01-01")) %>% 
+      mutate(MonthYear = floor_date(`Date Added`, "month"),
+             Month = month(MonthYear, label = TRUE, abbr = TRUE)) %>%
+      group_by(MonthYear, Month) %>%
+      summarize(sumBooks = length(Title), 
+                .groups="drop") %>%
+      group_by(Month) %>%
+      summarize(meanBooks = mean(sumBooks), 
+                nMonths = length(sumBooks),
+                seBooks = sd(sumBooks)/sqrt(length(sumBooks)),
+                .groups="drop") %>%
+      ggplot(data=.) +
+      geom_bar(aes(x=Month, y=meanBooks), stat="identity",
+                     fill= "turquoise", color = "blue") +
+      geom_errorbar(aes(x=Month, 
+                        ymax=meanBooks+seBooks, ymin=meanBooks-seBooks),
+                    color = "blue", width = 0.25) +
+      scale_y_continuous(name="Number of Books Added", expand = c(0,0)) +
+      theme(panel.background = element_blank(),
+            axis.line = element_line())
+```
