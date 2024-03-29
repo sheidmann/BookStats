@@ -4,13 +4,13 @@ author: "Sarah Heidmann"
 output: html_document
 ---
 
-*Data through 26 Feb 2024*
+*Data through 29 Mar 2024*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE)
 library(tidyverse)
 library(lubridate)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20240226.csv",
+books <- read_csv("data/goodreads_library_export_20240329.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 # Manually add additional dates for rereads
@@ -54,6 +54,7 @@ reread_dates <- tribble(
       "2023-04-29", # Why Fish Don't Exist
       "2022-12-25", # Almanack of Naval
       "2023-04-19", # True Grit
+      "2024-03-29", # Prophet
       "2018-03-05", # Night
       "2017-05-07", # Ender's Game 
       "2017-05-20", "2022-09-24", # Hobbit
@@ -104,7 +105,7 @@ rereads %>%
       geom_histogram(aes(x=YearRead), binwidth=1,
                      fill= "turquoise", color = "blue") +
       scale_y_continuous(name="Number of Books Read", expand = c(0,0)) +
-      scale_x_continuous(name= "", limits = c(minYear,maxYear),
+      scale_x_continuous(name= "", limits = c(minYear-1,maxYear+1),
                          breaks = seq(minYear,maxYear,1),
                          labels = seq(minYear,maxYear,1)) +
       theme(panel.background = element_blank(),
@@ -118,7 +119,7 @@ rereads %>%
       geom_bar(aes(x=YearRead, y=`Number of Pages`), stat="identity",
                      fill= "turquoise", color = "blue") +
       scale_y_continuous(name="Number of Pages Read", expand = c(0,0)) +
-      scale_x_continuous(name= "", limits = c(minYear,maxYear),
+      scale_x_continuous(name= "", limits = c(minYear-1,maxYear+1),
                          breaks = seq(minYear,maxYear,1),
                          labels = seq(minYear,maxYear,1)) +
       theme(panel.background = element_blank(),
