@@ -4,13 +4,13 @@ author: "Sarah Heidmann"
 output: html_document
 ---
 
-*Data through 29 Mar 2024*
+*Data through 3 May 2024*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE)
 library(tidyverse)
 library(lubridate)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20240329.csv",
+books <- read_csv("data/goodreads_library_export_20240503.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 # Manually add additional dates for rereads
@@ -21,6 +21,7 @@ reread_dates <- tribble(
       "2023-02-16", # Two Towers
       "2023-03-05", # Return of the King
       "2023-05-14", # Great Gatsby
+      "2024-04-07", # Inkheart
       "2021-05-15", # Da Vinci Code
       "2018-04-15", "2019-10-03", "2023-02-26", # Harry 1
       "2018-04-15", "2019-10-04", "2023-02-27", # Harry 2
@@ -55,6 +56,8 @@ reread_dates <- tribble(
       "2022-12-25", # Almanack of Naval
       "2023-04-19", # True Grit
       "2024-03-29", # Prophet
+      "2024-04-16", # Slow Productivity
+      "2024-04-27", # Wicked
       "2018-03-05", # Night
       "2017-05-07", # Ender's Game 
       "2017-05-20", "2022-09-24", # Hobbit
@@ -90,7 +93,7 @@ thisyear <- rereads %>%
 ## Goodreads redone
 ### Books and pages read each year
 
-In 2023, I've read `r thisyear` books so far. If I keep up this pace, I will finish `r round(thisyear / yday(today()) * 365, 0)` books by the end of this year.
+In 2024, I've read `r thisyear` books so far. If I keep up this pace, I will finish `r round(thisyear / yday(today()) * 365, 0)` books by the end of this year.
 
 ```{r BooksAndPagesYear}
 #minYear <- year(min(books$`Date Read`, na.rm = TRUE))
