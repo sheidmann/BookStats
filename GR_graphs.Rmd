@@ -4,13 +4,13 @@ author: "Sarah Heidmann"
 output: html_document
 ---
 
-*Data through 27 May 2024*
+*Data through 12 Jul 2024*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE)
 library(tidyverse)
 library(lubridate)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20240527.csv",
+books <- read_csv("data/goodreads_library_export_20240712.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 # Manually add additional dates for rereads
@@ -107,7 +107,8 @@ rereads %>%
       ggplot(data=.) +
       geom_histogram(aes(x=YearRead), binwidth=1,
                      fill= "turquoise", color = "blue") +
-      scale_y_continuous(name="Number of Books Read", expand = c(0,0)) +
+      scale_y_continuous(name="Number of Books Read", expand = c(0,0),
+                         breaks = seq(0,160,20)) +
       scale_x_continuous(name= "", limits = c(minYear-1,maxYear+1),
                          breaks = seq(minYear,maxYear,1),
                          labels = seq(minYear,maxYear,1)) +
