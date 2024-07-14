@@ -1,0 +1,125 @@
+---
+title: "Which Book To Read?"
+author: "Sarah Heidmann"
+output: html_document
+---
+*Data through 27 May 2024*
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(lubridate)
+library(knitr)
+books <- read_csv("data/goodreads_library_export_20240527.csv",
+                  col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
+                                   `Date Added`=col_date(format="%Y/%m/%d")))
+widebooks <- books %>%
+      separate_rows("Bookshelves", sep = ", ") %>%
+      select(Bookshelves, Title) %>%
+      mutate(shelflog = 1) %>%
+      pivot_wider(names_from=Bookshelves,
+                  values_from=shelflog) %>%
+      mutate_all(replace_na,0)
+
+wanttoread <- widebooks %>% 
+   filter(`to-read`==1) %>%
+   nrow()
+accessible <- widebooks %>% 
+   filter(`to-read`==1) %>%
+   filter(kindle==1|library==1|`st-thomas`==1|audible==1|`library-open`==1) %>%
+   nrow()
+fiction <- widebooks %>% 
+      filter(`to-read`==1 & fiction==1) %>% 
+      nrow()
+nonfiction <- widebooks %>% 
+      filter(`to-read`==1 & nonfiction==1) %>% 
+      nrow()
+
+booksperday_365 <- books %>%
+   filter(`Date Read`>=(today()-365)) %>%
+   nrow() / 365
+rawdaysleft <- wanttoread / booksperday_365
+booksaddedperday_365 <- books %>%
+   filter(`Date Added`>=(today()-365)) %>%
+   nrow() / 365
+netdaysleft <- wanttoread / (booksperday_365 - booksaddedperday_365)
+
+booksperday_30 <- books %>%
+   filter(`Date Read`>=(today()-30)) %>%
+   nrow() / 30
+booksaddedperday_30 <- books %>%
+   filter(`Date Added`>=(today()-30)) %>%
+   nrow() / 30
+```
+
+There are `r wanttoread` books on my Want-To-Read shelf.
+I have access to `r accessible` of them. Of my TBR, `r fiction` are fiction and `r nonfiction` are nonfiction.
+
+In the past year, on average, I read a book every `r round(1/booksperday_365,1)` days.
+If I continued to read at this rate and added no more books, it would take me `r round(rawdaysleft,0)` days (`r round(rawdaysleft/365,1)` years) to finish reading the rest of my list.
+
+In the same time, I added a book every `r round(1/booksaddedperday_365,1)` days.
+If I continued to add and read at this rate, it would take me `r round(netdaysleft,0)` days (`r round(netdaysleft/365,1)` years) to finish reading the rest of my list.
+
+In the past month, I read a book every `r round(1/booksperday_30,1)` days, and added a book every `r round(1/booksaddedperday_30,1)` days.
+
+
+## Highest Rated Books
+
+The 10 highest rated unread books in my library that I already have access to:
+
+```{r highRating}
+books %>%
+   filter(`Exclusive Shelf`=="to-read") %>%
+   select(Title, Author, `Original Publication Year`,
+          `Number of Pages`,`Average Rating`) %>%
+   left_join(select(widebooks,Title,
+                    kindle,library,`st-thomas`,audible,`library-open`), 
+             by="Title") %>%
+   filter(kindle==1|library==1|`st-thomas`==1|audible==1|`library-open`==1) %>%
+   pivot_longer(cols=all_of(c("kindle","library","st-thomas",
+                              "audible","library-open")),
+                names_to = "Available") %>%
+   filter(value==1) %>%
+   select(-value) %>%
+   arrange(desc(`Average Rating`)) %>%
+   slice_head(n=10) %>%
+   kable()
+```
+
+## Rankings
+
+Unread books currently available to me either in person, on my Kindle, or through Libby, ranked.
+Book ranking is the number of satisfied conditions below:
+
+* average rating above 4.0
+* highly recommended
+* island-themed or related
+* recommended by Emily Graslie or my teacher Mike
+* on a "life-changing" list
+* on a "top 100 lifetime" list
+* won an award
+* made into a movie
+
+The result, my top-10 to-read books:
+```{r highRanking}
+widebooks %>%
+   left_join(select(books, Title, Author, `Original Publication Year`,
+                    `Number of Pages`, `Average Rating`), 
+             by="Title") %>%
+   mutate(highrating = ifelse(`Average Rating`>4,1,0)) %>%
+   filter(`to-read`==1) %>%
+   filter(kindle==1|library==1|`st-thomas`==1|audible==1|`library-open`==1) %>%
+   pivot_longer(cols=all_of(c("kindle","library","st-thomas",
+                              "audible","library-open")),
+                names_to = "Available") %>%
+   filter(value==1) %>%
+   mutate(ranking=(`highly-recommended`*2)+island+`life-changing`+ highrating +
+             `top-100-lifetime`+`award-winning`+`brain-scoop`+`from-mike`+
+             `made-into-movie`) %>%
+   select(Title, Author,`Original Publication Year`, ranking, 
+          `Number of Pages`, `Average Rating`, Available) %>%
+   arrange(desc(ranking), desc(`Average Rating`)) %>%
+   slice_head(n=10) %>%
+   kable()
+```
+
