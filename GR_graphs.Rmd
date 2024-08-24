@@ -4,13 +4,13 @@ author: "Sarah Heidmann"
 output: html_document
 ---
 
-*Data through 1 Aug 2024*
+*Data through 24 Aug 2024*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE)
 library(tidyverse)
 library(lubridate)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20240801.csv",
+books <- read_csv("data/goodreads_library_export_20240824.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 # Manually add additional dates for rereads
@@ -30,10 +30,11 @@ reread_dates <- tribble(
       "2018-05-03", "2019-10-15", "2023-03-26", # Harry 5
       "2018-05-06", "2019-10-19", "2023-04-11", # Harry 6
       "2018-05-08", "2019-10-26", "2023-04-21", # Harry 7
-      "2023-01-02", #Jurassic Park
+      "2023-01-02", # Jurassic Park
       "2020-08-21", # Eragon
       "2021-01-28", # Dune
       "2017-05-20", "2020-12-21", # Little Prince
+      "2024-05-06", # Dark Matter
       "2021-08-12", # Wrinkle in Time
       "2018-05-26", "2019-08-21", # Sun and Her Flowers
       "2019-07-06", # Fifth Season
@@ -44,8 +45,11 @@ reread_dates <- tribble(
       "2021-12-05", # Eye of World
       "2023-09-30", # Sapiens
       "2020-07-30", # AART
+      "2024-06-16", # 3-body problem
+      NA, # Chernobyl
       "2021-01-29", # Murderbot 1
       NA, # Giver
+      NA, # Priory of the Orange Tree
       "2023-11-24", # Expecting Better
       "2023-11-28", # On Writing Well
       "2023-09-29", # Foundation
@@ -73,7 +77,7 @@ reread_dates <- tribble(
 test <- books %>% 
       filter(`Read Count` > 1) %>%
       arrange(`Date Read`) %>% 
-      # select(Title) %>% print(n=50) # Run up to here when fixing above table
+      # select(Title) %>% print(n=55) # Run up to here when fixing above table
       uncount(`Read Count`-1)
 nrow(test)==nrow(reread_dates) # should be true
 # Add the dates
