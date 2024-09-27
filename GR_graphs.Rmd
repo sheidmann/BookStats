@@ -4,13 +4,13 @@ author: "Sarah Heidmann"
 output: html_document
 ---
 
-*Data through 24 Aug 2024*
+*Data through 27 Sep 2024*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE)
 library(tidyverse)
 library(lubridate)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20240824.csv",
+books <- read_csv("data/goodreads_library_export_20240927.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 # Manually add additional dates for rereads
@@ -46,7 +46,7 @@ reread_dates <- tribble(
       "2023-09-30", # Sapiens
       "2020-07-30", # AART
       "2024-06-16", # 3-body problem
-      NA, # Chernobyl
+      "2024-08-30", # Chernobyl
       "2021-01-29", # Murderbot 1
       NA, # Giver
       NA, # Priory of the Orange Tree
@@ -151,6 +151,20 @@ rereads %>%
       theme(panel.background = element_blank(),
             axis.line = element_line())
 ```
+
+### Read count frequency
+```{r ReadCountFreq}
+rereads %>% 
+      ggplot(data=.,aes(x=`Read Count`)) +
+      geom_histogram(binwidth=1) +
+      scale_x_continuous(name="Read Count", expand = c(0,0))+
+      scale_y_continuous(expand = c(0,0)) +
+      #guides(fill="none") +
+      theme(panel.background = element_blank(),
+            axis.line = element_line(),
+            legend.position="bottom")
+```
+
 
 ### Read vs unread by publication year
 ```{r ReadUnreadPubYear}
