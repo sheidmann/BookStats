@@ -4,13 +4,13 @@ author: "Sarah Heidmann"
 output: html_document
 ---
 
-*Data through 27 Oct 2024*
+*Data through 4 Jan 2025*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE)
 library(tidyverse)
 library(lubridate)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20241027.csv",
+books <- read_csv("data/goodreads_library_export_20250104.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 # Manually add additional dates for rereads
@@ -61,6 +61,7 @@ reread_dates <- tribble(
       "2023-04-19", # True Grit
       "2024-03-29", # Prophet
       "2024-04-16", # Slow Productivity
+      "2024-12-30", # Dear Future Mama
       "2024-04-27", # Wicked
       "2018-03-05", # Night
       "2017-05-07", # Ender's Game 
