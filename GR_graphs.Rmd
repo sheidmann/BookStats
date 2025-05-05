@@ -4,13 +4,13 @@ author: "Sarah Heidmann"
 output: html_document
 ---
 
-*Data through 1 Apr 2025*
+*Data through 5 May 2025*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE)
 library(tidyverse)
 library(lubridate)
 library(knitr)
-books <- read_csv("data/goodreads_library_export_20250401.csv",
+books <- read_csv("data/goodreads_library_export_20250505.csv",
                   col_types = cols(`Date Read`=col_date(format="%Y/%m/%d"),
                                    `Date Added`=col_date(format="%Y/%m/%d")))
 # Manually add additional dates for rereads
@@ -39,8 +39,8 @@ reread_dates <- tribble(
       "2018-05-26", "2019-08-21", # Sun and Her Flowers
       "2019-07-06", # Fifth Season
       "2024-01-27", # Originals
-      NA, # Once Upon a Marigold
-      NA, # House of the Scorpion
+      "2019-01-11", # Once Upon a Marigold
+      "2019-01-18", # House of the Scorpion
       "2019-01-19", # Dealing w Dragons
       "2021-12-05", # Eye of World
       "2023-09-30", # Sapiens
@@ -48,8 +48,9 @@ reread_dates <- tribble(
       "2024-06-16", # 3-body problem
       "2024-08-30", # Chernobyl
       "2021-01-29", # Murderbot 1
-      NA, # Giver
-      NA, # Priory of the Orange Tree
+      "2020-02-29", # Giver
+      NA, # Red Mars
+      "2024-12-13", # Priory of the Orange Tree
       "2023-11-24", # Expecting Better
       "2023-11-28", # On Writing Well
       "2023-09-29", # Foundation
